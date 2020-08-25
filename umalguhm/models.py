@@ -1,17 +1,9 @@
+"""This module defines the database structure for the application"""
 from sqlalchemy import Column, Integer, String
 from .db import Base
-from passlib.hash import sha256_crypt
-
-class PassGen():
-    def cryptpass(password):
-        secure_password = sha256_crypt.hash(password)
-        return secure_password
-
-    def decryptpass(password, hash):
-        verify_password = sha256_crypt.verify(password, hash)
-        return verify_password
 
 class User(Base):
+    """This class sets up a table for user accounts"""
     __tablename__= "users"
     id = Column(Integer, primary_key=True, autoincrement=True)
     username = Column(String, unique=True, nullable=False)
@@ -19,13 +11,12 @@ class User(Base):
     role = Column(String, nullable=False)
 
     def __init__(self, username=None, password=None, role='member'):
+        """Sets a default of member for a users role unless otherwise
+        specified"""
         self.username = username
         self.password = password
         self.role = role
 
     def __repr__(self):
+        """Return the username"""
         return '<User %r>' % self.username
-#db.session.add(User(name="Flask", email="example@example.com"))
-#db.session.commit()
-
-#users = User.query.all()

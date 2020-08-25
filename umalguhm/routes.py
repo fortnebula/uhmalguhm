@@ -1,36 +1,35 @@
-# Package imports
-
+"""This module provides routes as classes so they can be called in the main application"""
 from flask import jsonify, request
 from flask_restful import Resource
-from flask_jwt_extended import (
-    jwt_required, create_access_token,
-    jwt_refresh_token_required, create_refresh_token,
-    get_jwt_identity, set_access_cookies,
-    set_refresh_cookies, unset_jwt_cookies
-)
+from flask_jwt_extended import jwt_required, create_access_token
+from passlib.hash import sha256_crypt
 
 # Local module imports
 from .db import db_session
-from .models import PassGen, User
+from .models import User
 
 class Index(Resource):
+    """default function is to provide the api version and possibily list available endpoints"""
     def get(self):
+        """Responds back with the api version"""
         response = jsonify({"version": "v0.0.1"})
         return (response.json), 200
 
-# Provide a method to create access tokens. The create_access_token()
-# function is used to actually generate the token, and you can return
-# it to the caller however you choose.
 class Token(Resource):
+    """This endpoint grabs a token authentication is successful"""
     def get(self):
+        """get request should return what this endpoint can do"""
         response = jsonify({"msg": "Post username and password"})
         return (response.json), 200
 
     def post(self):
+        """A post request to this endpoint takes the username and
+        password submitted via json and checks the database to ensure
+        a match before issuing a token"""
         if not request.is_json:
             response = jsonify({"msg": "Missing JSON in request"})
             return (response.json), 400
-    
+
         username = request.json.get('username', None)
         password = request.json.get('password', None)
         if not username:
@@ -38,11 +37,10 @@ class Token(Resource):
             return (response.json), 400
         if not password:
             response = jsonify({"msg": "Missing password parameter"})
-            return (response.json), 400    
+            return (response.json), 400
         query = User.query.filter_by(username=username).first()
-        verifypass = PassGen.decryptpass(password, query.password)
-        if verifypass == True:     
-            # Identity can be any data that is json serializable
+        verifypass = sha256_crypt.verify(password, query.password)
+        if verifypass is True:
             access_token = create_access_token(identity=username)
             response = jsonify(access_token=access_token)
             return (response.json), 200
@@ -50,17 +48,23 @@ class Token(Resource):
         return (response.json), 401
 
 class Register(Resource):
+    """This endpoint registers users to the system. Currently any users may
+    be registered, nothing is checked to make sure a user is authorized to do so"""
     def get(self):
+        """get request should return what this endpoint can do"""
         data = {
         'error': 'this endpoint does not accept get requests, try posting with curl'
         }
         return data
-
+    @jwt_required
     def post(self):
+        """A post request to this method will take the username and password from json
+        and add them to the database. Passwords are salted before being placed into
+        the database"""
         if not request.is_json:
             response = jsonify({"msg": "Missing JSON in request"})
             return (response.json), 400
-    
+
         username = request.json.get('username', None)
         password = request.json.get('password', None)
         if not username:
@@ -69,16 +73,8 @@ class Register(Resource):
         if not password:
             response = jsonify({"msg": "Missing password parameter"})
             return (response.json), 400
-        crypt_pass = PassGen.cryptpass(password)
-        adduser = db_session.add(User(username, crypt_pass))
+        crypt_pass = sha256_crypt.hash(password)
+        db_session.add(User(username, crypt_pass))
         db_session.commit()
-        response = jsonify(status='registered', username=username) 
+        response = jsonify(status='registered', username=username)
         return (response.json), 200
-# Protect a view with jwt_required, which requires a valid access token
-# in the request to access.
-#@app.route('/protected', methods=['GET'])
-#@jwt_required
-#def protected():
-    # Access the identity of the current user with get_jwt_identity
-#    current_user = get_jwt_identity()
-#    return jsonify(logged_in_as=current_user), 200

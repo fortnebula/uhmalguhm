@@ -1,3 +1,4 @@
+"""This is the main application"""
 # Package imports
 from flask import Flask
 from flask_jwt_extended import JWTManager
