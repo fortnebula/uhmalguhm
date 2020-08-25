@@ -7,7 +7,7 @@
  
  ### How to use this software
 ```
-git clone https://github.com:fortnebula/uhmalguhm.git
+git clone https://github.com/fortnebula/uhmalguhm.git
 pipenv shell
 pip install -r requirements.txt`
 python3 main.py`
