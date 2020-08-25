@@ -1,4 +1,5 @@
-"""This module provides routes as classes so they can be called in the main application"""
+"""This module provides routes as classes so they can be called
+in the main application"""
 from flask import jsonify, request
 from flask_restful import Resource
 from flask_jwt_extended import jwt_required, create_access_token
@@ -8,12 +9,15 @@ from passlib.hash import sha256_crypt
 from .db import db_session
 from .models import User
 
+
 class Index(Resource):
-    """default function is to provide the api version and possibily list available endpoints"""
+    """default function is to provide the api version and possibily
+    list available endpoints"""
     def get(self):
         """Responds back with the api version"""
         response = jsonify({"version": "v0.0.1"})
         return (response.json), 200
+
 
 class Token(Resource):
     """This endpoint grabs a token authentication is successful"""
@@ -47,20 +51,21 @@ class Token(Resource):
         response = jsonify({"msg": "unauthenticated"})
         return (response.json), 401
 
+
 class Register(Resource):
-    """This endpoint registers users to the system. Currently any users may
-    be registered, nothing is checked to make sure a user is authorized to do so"""
+    """This endpoint registers users to the system. Currently any users
+    may be registered, nothing is checked to make sure a user is authorized
+    to do so"""
     def get(self):
         """get request should return what this endpoint can do"""
-        data = {
-        'error': 'this endpoint does not accept get requests, try posting with curl'
-        }
-        return data
+        response = jsonify({"msg": "Post username and password"})
+        return (response.json), 200
+
     @jwt_required
     def post(self):
-        """A post request to this method will take the username and password from json
-        and add them to the database. Passwords are salted before being placed into
-        the database"""
+        """A post request to this method will take the username and
+        password from json and add them to the database. Passwords are
+        salted before being placed into the database"""
         if not request.is_json:
             response = jsonify({"msg": "Missing JSON in request"})
             return (response.json), 400

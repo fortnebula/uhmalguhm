@@ -2,9 +2,10 @@
 from sqlalchemy import Column, Integer, String
 from .db import Base
 
+
 class User(Base):
     """This class sets up a table for user accounts"""
-    __tablename__= "users"
+    __tablename__ = "users"
     id = Column(Integer, primary_key=True, autoincrement=True)
     username = Column(String, unique=True, nullable=False)
     password = Column(String, nullable=False)
