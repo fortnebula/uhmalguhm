@@ -2,7 +2,8 @@
 in the main application"""
 from flask import jsonify, request
 from flask_restful import Resource
-from flask_jwt_extended import create_access_token
+from flask_jwt_extended import (create_access_token, create_refresh_token,
+                                jwt_refresh_token_required, get_jwt_identity)
 from passlib.hash import sha256_crypt
 
 # Local module imports
@@ -19,7 +20,7 @@ class Index(Resource):
         return (response.json), 200
 
 
-class Token(Resource):
+class IssueTokens(Resource):
     """This endpoint grabs a token authentication is successful"""
     def get(self):
         """get request should return what this endpoint can do"""
@@ -46,10 +47,30 @@ class Token(Resource):
         verifypass = sha256_crypt.verify(password, query.password)
         if verifypass is True:
             access_token = create_access_token(identity=username)
-            response = jsonify(access_token=access_token)
+            refresh_token = create_refresh_token(identity=username)
+            response = jsonify(access_token=access_token,
+                               refresh_token=refresh_token)
             return (response.json), 200
         response = jsonify({"msg": "unauthenticated"})
         return (response.json), 401
+
+
+class RefreshTokens(Resource):
+    """This endpoint grabs a token authentication is successful"""
+    def get(self):
+        """get request should return what this endpoint can do"""
+        response = jsonify({"msg": "Post username and password"})
+        return (response.json), 200
+
+    @jwt_refresh_token_required
+    def post(self):
+        """A post request to this endpoint takes the username and
+        password submitted via json and checks the database to ensure
+        a match before issuing a token"""
+        current_user = get_jwt_identity()
+        create_new_token = create_access_token(identity=current_user)
+        response = jsonify(access_token=create_new_token)
+        return (response.json), 200
 
 
 class Register(Resource):

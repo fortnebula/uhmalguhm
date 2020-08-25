@@ -6,7 +6,8 @@ from flask_restful import Api
 
 # Local module imports
 from umalguhm.config import DevelopmentConfig
-from umalguhm.routes import Index, Token, Register
+from umalguhm.routes import (Index, IssueTokens,
+                             RefreshTokens, Register)
 from umalguhm.db import init_db
 
 
@@ -18,7 +19,8 @@ jwt = JWTManager(app)
 
 # API endpoints for this application
 api.add_resource(Index, '/')
-api.add_resource(Token, '/token')
+api.add_resource(IssueTokens, '/token')
+api.add_resource(RefreshTokens, '/token/refresh')
 api.add_resource(Register, '/register')
 
 if __name__ == '__main__':
