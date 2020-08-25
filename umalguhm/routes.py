@@ -2,7 +2,7 @@
 in the main application"""
 from flask import jsonify, request
 from flask_restful import Resource
-from flask_jwt_extended import jwt_required, create_access_token
+from flask_jwt_extended import create_access_token
 from passlib.hash import sha256_crypt
 
 # Local module imports
@@ -61,7 +61,6 @@ class Register(Resource):
         response = jsonify({"msg": "Post username and password"})
         return (response.json), 200
 
-    @jwt_required
     def post(self):
         """A post request to this method will take the username and
         password from json and add them to the database. Passwords are
