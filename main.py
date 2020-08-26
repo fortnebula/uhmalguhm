@@ -2,13 +2,13 @@
 # Package imports
 from flask import Flask
 from flask_jwt_extended import JWTManager
-from flask_restful import Api
+from flask_restx import Api
 
 # Local module imports
-from umalguhm.config import DevelopmentConfig
-from umalguhm.routes import (Index, IssueTokens,
-                             RefreshTokens, Register)
-from umalguhm.db import init_db
+from conf.config import DevelopmentConfig
+from api.auth.routes import (Version, IssueTokens,
+                             RefreshTokens, UserCreate)
+from db.database import init_db
 
 
 # Main Application Initialization
@@ -18,11 +18,12 @@ api = Api(app)
 jwt = JWTManager(app)
 
 # API endpoints for this application
-api.add_resource(Index, '/')
-api.add_resource(IssueTokens, '/token')
-api.add_resource(RefreshTokens, '/token/refresh')
-api.add_resource(Register, '/register')
+api.add_resource(Version, '/api/v1/')
+api.add_resource(IssueTokens, '/api/v1/token/issue')
+api.add_resource(RefreshTokens, '/api/v1/token/refresh')
+api.add_resource(UserCreate, '/api/v1/user/create')
 
 if __name__ == '__main__':
-    init_db()
+    with app.app_context():
+        init_db()
     app.run()

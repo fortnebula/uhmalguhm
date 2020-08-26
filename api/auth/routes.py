@@ -1,17 +1,17 @@
 """This module provides routes as classes so they can be called
 in the main application"""
 from flask import jsonify, request
-from flask_restful import Resource
+from flask_restx import Resource
 from flask_jwt_extended import (create_access_token, create_refresh_token,
                                 jwt_refresh_token_required, get_jwt_identity)
 from passlib.hash import sha256_crypt
 
 # Local module imports
-from .db import db_session
-from .models import User
+from db.database import db_session as db
+from api.auth.models import User
 
 
-class Index(Resource):
+class Version(Resource):
     """default function is to provide the api version and possibily
     list available endpoints"""
     def get(self):
@@ -26,7 +26,6 @@ class IssueTokens(Resource):
         """get request should return what this endpoint can do"""
         response = jsonify({"msg": "Post username and password"})
         return (response.json), 200
-
     def post(self):
         """A post request to this endpoint takes the username and
         password submitted via json and checks the database to ensure
@@ -73,7 +72,7 @@ class RefreshTokens(Resource):
         return (response.json), 200
 
 
-class Register(Resource):
+class UserCreate(Resource):
     """This endpoint registers users to the system. Currently any users
     may be registered, nothing is checked to make sure a user is authorized
     to do so"""
@@ -98,8 +97,7 @@ class Register(Resource):
         if not password:
             response = jsonify({"msg": "Missing password parameter"})
             return (response.json), 400
-        crypt_pass = sha256_crypt.hash(password)
-        db_session.add(User(username, crypt_pass))
-        db_session.commit()
+        db.add(User(username, password))
+        db.commit()
         response = jsonify(status='registered', username=username)
         return (response.json), 200

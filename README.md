@@ -15,13 +15,18 @@ python3 main.py
 ```
 ### Where to find the documentation
 
-Currently there are no docs, however a system for documentation is in-flight. This README serves as the documentation for usage.
+This README serves as the documentation for usage of uhmalguhm for now. Additionally the application includes some rudimentary docs at the root url.
+
+### What does this thing do?
+
+Currently this application at the POC stage. The only things you can do are create users, issue tokens, and refresh tokens.
+This README will be updated until a better doc system is put into place. It is expected that each function should have an example on interactions with this software. 
 
 ### Register a user
 To use the api, first a user needs to be created
 
 ```
-curl -H "Content-Type: application/json" -X POST   -d '{"username":"test","password":"test"}' http://localhost:5000/register
+curl -H "Content-Type: application/json" -X POST   -d '{"username":"test","password":"test"}' http://localhost:5000/api/v1/user/create
 ```
 
 A successful registration should return
@@ -38,7 +43,7 @@ A successful registration should return
 Now that you have a user, you can request an access token using the token endpoint
 
 ```
-curl -H "Content-Type: application/json" -X POST   -d '{"username":"test","password":"test"}' http://localhost:5000/token
+curl -H "Content-Type: application/json" -X POST   -d '{"username":"test","password":"test"}' http://localhost:5000/api/v1/token/issue
 ```
 
 This will return an access token and a refresh token
@@ -63,7 +68,7 @@ export REFRESH="eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE1OTgzNTU5MDIsIm5
 You can now use this refresh token to obtain a new access token by posting to the refresh endpoint
 
 ```
-curl -H "Authorization: Bearer $REFRESH" -X POST http://localhost:5000/token/refresh
+curl -H "Authorization: Bearer $REFRESH" -X POST http://localhost:5000/api/v1/token/refresh
 ```
 
 The API should return a new access token to extend the lifetime of your current session

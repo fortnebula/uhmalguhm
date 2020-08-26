@@ -1,6 +1,7 @@
 """This module defines the database structure for the application"""
 from sqlalchemy import Column, Integer, String
-from .db import Base
+from passlib.hash import sha256_crypt
+from db.database import Base
 
 
 class User(Base):
@@ -15,7 +16,7 @@ class User(Base):
         """Sets a default of member for a users role unless otherwise
         specified"""
         self.username = username
-        self.password = password
+        self.password = sha256_crypt.hash(password)
         self.role = role
 
     def __repr__(self):

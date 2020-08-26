@@ -13,13 +13,14 @@ class Config():
 
 class ProductionConfig(Config):
     """production application configurations"""
-    DATABASE_URI = 'mysql://user@localhost/foo'
 
 
 class DevelopmentConfig(Config):
     """development application configurations"""
     DEBUG = True
     JWT_COOKIE_CSRF_PROTECT = False
+    SQLALCHEMY_DATABASE_URL = 'sqlite:///db.sqlite3'
+    ADMIN_TOKEN = 'sosecureijustcant'
 
 
 class TestingConfig(Config):
