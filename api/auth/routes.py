@@ -43,8 +43,7 @@ class IssueTokens(Resource):
             response = jsonify({"msg": "Missing password parameter"})
             return (response.json), 400
         query = User.query.filter_by(username=username).first()
-        verifypass = sha256_crypt.verify(password, query.password)
-        if verifypass is True:
+        if query.verify_password(password) is True:
             access_token = create_access_token(identity=username)
             refresh_token = create_refresh_token(identity=username)
             response = jsonify(access_token=access_token,

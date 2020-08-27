@@ -3,3 +3,4 @@ Flask-JWT-Extended
 flask-restx
 SQLAlchemy
 passlib
+dockerfile-parse
