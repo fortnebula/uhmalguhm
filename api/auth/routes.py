@@ -4,7 +4,6 @@ from flask import jsonify, request
 from flask_restx import Resource
 from flask_jwt_extended import (create_access_token, create_refresh_token,
                                 jwt_refresh_token_required, get_jwt_identity)
-from passlib.hash import sha256_crypt
 
 # Local module imports
 from db.database import db_session as db
@@ -26,6 +25,7 @@ class IssueTokens(Resource):
         """get request should return what this endpoint can do"""
         response = jsonify({"msg": "Post username and password"})
         return (response.json), 200
+
     def post(self):
         """A post request to this endpoint takes the username and
         password submitted via json and checks the database to ensure

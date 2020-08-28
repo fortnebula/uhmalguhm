@@ -1,8 +1,9 @@
 """This module defines the database structure for the application"""
-from sqlalchemy import Table, Column, Integer, String, ForeignKey, DateTime
+from sqlalchemy import Column, String, ForeignKey
 from sqlalchemy.orm import relationship
 from passlib.hash import sha256_crypt
 from db.database import BaseModel, GUID
+
 
 class User(BaseModel):
     """This class sets up a table for user accounts"""

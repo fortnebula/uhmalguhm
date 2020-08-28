@@ -4,13 +4,13 @@ from flask_jwt_extended import jwt_required, get_jwt_identity
 from db.database import db_session as db
 from db.models import User, Container
 
+
 class CreateImage(Resource):
     """This endpoint grabs a token authentication is successful"""
     def get(self):
         """get request should return what this endpoint can do"""
         response = jsonify({"msg": "Post base_image and user_image"})
         return (response.json), 200
-
 
     @jwt_required
     def post(self):
@@ -19,8 +19,8 @@ class CreateImage(Resource):
         a match before issuing a token"""
         current_user = get_jwt_identity()
         if current_user is None:
-                response = jsonify({"msg": "unauthenticated"})
-                return (response.json), 401
+            response = jsonify({"msg": "unauthenticated"})
+            return (response.json), 401
         if not request.is_json:
             response = jsonify({"msg": "Missing JSON in request"})
             return (response.json), 400
