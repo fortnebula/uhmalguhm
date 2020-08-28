@@ -25,6 +25,7 @@ api.add_resource(RefreshTokens, '/api/v1/token/refresh')
 api.add_resource(UserCreate, '/api/v1/user/create')
 api.add_resource(CreateImage, '/api/v1/container/create')
 
-
+init_db()
 if __name__ == '__main__':
+    init_db()
     app.run()

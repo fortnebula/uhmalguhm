@@ -8,7 +8,7 @@ from passlib.hash import sha256_crypt
 
 # Local module imports
 from db.database import db_session as db
-from api.auth.models import User
+from db.models import User
 
 
 class Version(Resource):

@@ -21,6 +21,7 @@ class DevelopmentConfig(Config):
     JWT_COOKIE_CSRF_PROTECT = False
     SQLALCHEMY_DATABASE_URL = 'sqlite:///db.sqlite3'
     ADMIN_TOKEN = 'sosecureijustcant'
+    JWT_SECRET_KEY = 'topsecrettoken'
 
 
 class TestingConfig(Config):
