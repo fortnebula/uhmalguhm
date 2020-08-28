@@ -32,19 +32,16 @@ class Container(BaseModel):
     """This class sets up a table for user accounts"""
     __tablename__ = "containers"
     user_id = Column(GUID(), ForeignKey('users.uuid'))
-    name = Column(String, nullable=False)
-    base_image = Column(String)
-    user_image = Column(String)
-    git_repo = Column(String, nullable=False)
-    image = Column(String)
 
-    def __init__(self, user_id=None, name=None, git_repo=None):
+    docker_image = Column(String, nullable=False)
+    docker_tag = Column(String, nullable=False)
+
+    def __init__(self, user_id=None, docker_image=None, docker_tag=None):
         """Sets a default of member for a users role unless otherwise
         specified"""
         self.user_id = user_id
-        self.name = name
-        self.git_repo = git_repo
-        return self.uuid
+        self.docker_image = docker_image
+        self.docker_tag = docker_tag
 
     def __repr__(self):
         """Return the username"""

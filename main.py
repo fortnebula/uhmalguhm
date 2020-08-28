@@ -11,7 +11,6 @@ from api.auth.routes import (Version, IssueTokens,
 from api.container.routes import CreateImage
 from db.database import init_db
 
-
 # Main Application Initialization
 app = Flask(__name__)
 app.config.from_object(DevelopmentConfig())

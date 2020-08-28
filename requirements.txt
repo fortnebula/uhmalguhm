@@ -4,3 +4,4 @@ flask-restx
 SQLAlchemy
 passlib
 dockerfile-parse
+docker
