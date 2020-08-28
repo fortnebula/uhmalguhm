@@ -1,5 +1,5 @@
 """This module configures the application to talk with a database"""
-from sqlalchemy import create_engine, Column, Integer, String, DateTime
+from sqlalchemy import create_engine, Column, DateTime
 from sqlalchemy.orm import scoped_session, sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.types import TypeDecorator, CHAR

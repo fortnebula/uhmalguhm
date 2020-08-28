@@ -1,13 +1,14 @@
 """This module defines the database structure for the application"""
-from sqlalchemy import Column, Integer, String
+from sqlalchemy import Table, Column, Integer, String, ForeignKey, DateTime
+from sqlalchemy.orm import relationship
 from passlib.hash import sha256_crypt
-from db.database import BaseModel
+from db.database import BaseModel, GUID
 
 
 class User(BaseModel):
     """This class sets up a table for user accounts"""
     __tablename__ = "users"
-    username = Column(String, unique=True, nullable=False)
+    username = Column(String, unique=False, nullable=False)
     password_hash = Column(String, nullable=False)
     role = Column(String, nullable=False)
 
