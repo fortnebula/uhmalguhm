@@ -1,30 +1,25 @@
 """This is the main application"""
 # Package imports
 from flask import Flask
-from flask_jwt_extended import JWTManager
-from flask_restx import Api
 
 # Local module imports
-from conf.config import DevelopmentConfig
-from api.auth.routes import (Version, IssueTokens,
-                             RefreshTokens, UserCreate)
-from api.container.routes import CreateImage
-from db.database import init_db
+from extensions import register_extensions
+from api.controller import register_routes
+from conf.config import config
 
-# Main Application Initialization
-app = Flask(__name__)
-app.config.from_object(DevelopmentConfig())
-api = Api(app)
-jwt = JWTManager(app)
 
-# API endpoints for this application
-api.add_resource(Version, '/api/v1/')
-api.add_resource(IssueTokens, '/api/v1/token/issue')
-api.add_resource(RefreshTokens, '/api/v1/token/refresh')
-api.add_resource(UserCreate, '/api/v1/user/create')
-api.add_resource(CreateImage, '/api/v1/container/create')
+def create_app():
+    app = Flask(__name__)
+    app.config.from_object(config)
+    app.url_map.strict_slashes = False
+    register_extensions(app)
+    register_routes(app)
+    return app
 
-init_db()
-if __name__ == '__main__':
-    init_db()
-    app.run()
+
+def create_worker_app():
+    """Minimal App without routes for celery worker."""
+    app = Flask(__name__)
+    app.config.from_object(config)
+    register_extensions(app, worker=True)
+    return app

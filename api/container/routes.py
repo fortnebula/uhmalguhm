@@ -3,7 +3,7 @@ from flask_restx import Resource
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from db.database import db_session as db
 from db.models import User, Container
-from api.container.functions import BuildImage as build
+from api.container import tasks
 
 
 class CreateImage(Resource):
@@ -35,11 +35,11 @@ class CreateImage(Resource):
             return (response.json), 400
         query = User.query.filter_by(username=current_user).first()
         user_id = query.uuid
-        id = db.add(Container(user_id, docker_image, docker_tag))
-        print (id)
+        status = 'building'
+        container_id = Container(user_id, docker_image, docker_tag, status)
+        db.add(container_id)
         db.commit()
-        tarfile = build.create_tar(docker_image, docker_tag)
-        build_container = build.create_base_image(tarfile)
-        create_boot = build.install_init(build_container)
-        response = jsonify(status='building', id=id)
+        tasks.create_image.apply_async(args=[container_id.uuid,
+                                       docker_image, docker_tag])
+        response = jsonify(status=status, id=container_id.uuid)
         return (response.json), 200
