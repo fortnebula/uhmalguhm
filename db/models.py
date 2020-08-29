@@ -35,15 +35,17 @@ class Container(BaseModel):
     docker_image = Column(String, nullable=False)
     docker_tag = Column(String, nullable=False)
     status = Column(String, nullable=False)
+    image_format = Column(String, nullable=False)
 
     def __init__(self, user_id=None, docker_image=None,
-                 docker_tag=None, status=None):
+                 docker_tag=None, status=None, image_format=None):
         """Sets a default of member for a users role unless otherwise
         specified"""
         self.user_id = user_id
         self.docker_image = docker_image
         self.docker_tag = docker_tag
         self.status = status
+        self.image_format = image_format
 
     def __repr__(self):
         """Return the username"""
