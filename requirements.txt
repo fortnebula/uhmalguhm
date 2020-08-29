@@ -5,4 +5,7 @@ SQLAlchemy
 passlib
 docker
 celery
-# guestfs
+redis
+gunicorn
+supervisor
+https://download.libguestfs.org/python/guestfs-1.40.2.tar.gz

@@ -5,13 +5,34 @@
 
  Essentially uhmalguhm will build an image that is very fast to boot up that is capable of consuming a Dockerfile.
 
- ### How to use this software
+### How to setup a development environment
+Currently this application is being developed on OpenSuse tumbleweed and has not been tested on any other distro.
+
+```
+sudo zypper -y install git python3-pip docker libguestfs-devel python3-devel libguestfs gcc
+sudo systemctl enable --now docker
+sudo usermod -aG docker $USER
+pip install pipenv
+echo 'PATH=$PATH:~/.local/bin' >> ~/.bashrc
+sudo reboot
+```
+
+### How to use this software
 ```
 git clone https://github.com/fortnebula/uhmalguhm.git
 cd uhmalguhm
 pipenv shell
 pip install -r requirements.txt
-python3 main.py
+docker run -d -p 6379:6379 redis:latest
+celery worker -A worker.celery --loglevel=info &
+export FLASK_APP=main.py
+export FLASK_ENV=development
+flask run
+```
+
+You can also use supervisor with the included config file to start flask, redis, and celery, however it won't auto-reload
+```
+supervisord
 ```
 ### Where to find the documentation
 
