@@ -20,7 +20,7 @@ This README serves as the documentation for usage of uhmalguhm for now. Addition
 ### What does this thing do?
 
 Currently this application at the POC stage. The only things you can do are create users, issue tokens, and refresh tokens.
-This README will be updated until a better doc system is put into place. It is expected that each function should have an example on interactions with this software. 
+This README will be updated until a better doc system is put into place. It is expected that each function should have an example on interactions with this software.
 
 ### Register a user
 To use the api, first a user needs to be created
@@ -79,3 +79,41 @@ The API should return a new access token to extend the lifetime of your current 
 }
 
 ```
+
+### Create an virtual machine image
+
+*** Warning
+This code is still very much a work in progress and moving very fast, so don't
+count on anything to be consistent until this method is stablized and you do
+not see this warning anymore
+
+First you need an access token, so hit the api to issue a token
+
+```
+curl -H "Content-Type: application/json" -X POST   -d '{"username":"test1","password":"test1"}' http://localhost:5000/api/v1/token/issue
+{
+ "access_token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE1OTg3MjM3NzYsIm5iZiI6MTU5ODcyMzc3NiwianRpIjoiY2Q5Njg2YmQtZDk3Ny00OWI1LWI1NTktMTJkYjEyYTlmOTNiIiwiZXhwIjoxNTk4NzI0Njc2LCJpZGVudGl0eSI6InRlc3QxIiwiZnJlc2giOmZhbHNlLCJ0eXBlIjoiYWNjZXNzIn0.hcbnv7aZoVqPjoHkKOlLlueb9iuLR8AZRnkJr72ZMVY",
+ "refresh_token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE1OTg3MjM3NzYsIm5iZiI6MTU5ODcyMzc3NiwianRpIjoiZTk3NWE3ZTMtMjE5My00ZDRiLThlODAtM2E3NTdmMzdkYWRiIiwiZXhwIjoxNjAxMzE1Nzc2LCJpZGVudGl0eSI6InRlc3QxIiwidHlwZSI6InJlZnJlc2gifQ.me1X1z24D4IACWZbF59vBCYq5aCYDbIpiPSt79-HytA"
+}
+```
+
+Next export the access token to make your life less hateful
+
+```
+export ACS="eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE1OTg3MjM3NzYsIm5iZiI6MTU5ODcyMzc3NiwianRpIjoiY2Q5Njg2YmQtZDk3Ny00OWI1LWI1NTktMTJkYjEyYTlmOTNiIiwiZXhwIjoxNTk4NzI0Njc2LCJpZGVudGl0eSI6InRlc3QxIiwiZnJlc2giOmZhbHNlLCJ0eXBlIjoiYWNjZXNzIn0.hcbnv7aZoVqPjoHkKOlLlueb9iuLR8AZRnkJr72ZMVY"
+```
+
+Now you can tell uhmalguhm to create a virtual machine image
+
+```
+curl -H "Authorization: Bearer $ACS"  -H "Content-Type: application/json" -X POST -d '{"image":"nginx", "tag":"latest"}' http://localhost:5000/api/v1/container/create
+{
+ "id": "b3b47b6d-b208-47a7-af2e-e7df92524678",
+ "status": "building"
+}
+```
+
+That's all for now, it just builds and deletes the image. However in the near
+term this function will copy the image to the storage locations you have setup
+in the API. (this doesn't exsist yet)
+

@@ -63,15 +63,6 @@ def log(message):
     logger.critical(message)
 
 
-@celery.task
-def reverse_messages():
-    """Reverse all messages in DB."""
-    for message in Message.query.all():
-        words = message.text.split()
-        message.text = " ".join(reversed(words))
-        db.commit()
-
-
 @task_postrun.connect
 def close_session(*args, **kwargs):
     # Flask SQLAlchemy will automatically create new sessions for you from
